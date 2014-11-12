@@ -142,6 +142,30 @@ background-color: rgb(227, 227, 227);</string>
     <property name="title">
      <string/>
     </property>
+    <widget class="QLabel" name="timer">
+     <property name="geometry">
+      <rect>
+       <x>29</x>
+       <y>8</y>
+       <width>84</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>27</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+       <stylestrategy>PreferDefault</stylestrategy>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">color: rgb(56, 56, 56)</string>
+     </property>
+     <property name="text">
+      <string>1 : 00</string>
+     </property>
+    </widget>
    </widget>
   </widget>
  </widget>
