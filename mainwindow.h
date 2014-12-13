@@ -3,12 +3,13 @@
 
 #include <QMainWindow>
 
-extern int total_words_passed;
-extern int total_fails;
+extern int totalWordsPassed;
+extern int totalFails;
 extern int timerSeconds;
 extern bool timerIsActive;
 extern int maxFiles;
 extern int minFiles;
+extern int totalCharactersPassed;
 
 namespace Ui {
 class MainWindow;

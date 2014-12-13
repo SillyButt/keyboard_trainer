@@ -7,11 +7,12 @@
 #include <QDebug>
 #include <time.h>
 
-int total_words_passed;
-int total_fails;
+int totalWordsPassed;
+int totalFails;
 int maxFiles = 10;
 int minFiles = 1;
 int timerSeconds;
+int totalCharactersPassed = 0;
 bool timerIsActive;
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -32,12 +33,16 @@ MainWindow::~MainWindow()
 void MainWindow::initialize()
 {
 
-    total_words_passed  = 0;
-    total_fails         = 0;
+    totalWordsPassed    = 0;
+    totalFails          = 0;
     timerIsActive       = false;
     timerSeconds        = 60;
+    totalCharactersPassed = 0;
     ui->inputText->clear();
     ui->inputText->setEnabled(true);
+    ui->resultsWrapper->hide();
+    ui->WPM->hide();
+    ui->LPM->hide();
     ui->timer->setText("1 : 00");
     if (timer != NULL)
     {
@@ -135,7 +140,8 @@ void MainWindow::on_inputText_textEdited(const QString &arg)
                 MainWindow::removeCurrentWord();
                 MainWindow::checkIsLastWord();
 
-                total_words_passed++;
+                totalCharactersPassed += length;
+                totalWordsPassed++;
                 return;
             }
         }
@@ -146,7 +152,7 @@ void MainWindow::on_inputText_textEdited(const QString &arg)
             // Color the character on originalText
             //qDebug() << "GOOD";
         } else {
-            total_fails++;
+            totalFails++;
             //qDebug() << "BAD";
         }
     }
@@ -186,9 +192,15 @@ void MainWindow::update()
 void MainWindow::endProgram()
 {
     qDebug() << "END";
-    qDebug() << "WINS: " << total_words_passed;
+    qDebug() << "WINS: " << totalWordsPassed;
+    qDebug() << "CHARASTERS: " << totalCharactersPassed;
+    ui->resultsWrapper->show();
+    ui->WPM->show();
+    ui->LPM->show();
+    ui->WPM->setText("СЛОВ В МИНУТУ: " + QString::number(totalWordsPassed));
+    ui->LPM->setText("СИМВОЛОВ В МИНУТУ: " + QString::number(totalCharactersPassed));
     ui->inputText->setDisabled(true);
-    ui->timer->setText("0 : 0");
+    ui->timer->setText("0 : 00");
     timer->stop();
     timerIsActive = false;
 }

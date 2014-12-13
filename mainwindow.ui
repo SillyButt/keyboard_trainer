@@ -62,6 +62,12 @@ border: 1px solid rgb(146, 146, 146);</string>
       <verstretch>0</verstretch>
      </sizepolicy>
     </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
     <property name="styleSheet">
      <string notr="true">border-radius: 6px;
 border-color: none;
@@ -71,14 +77,18 @@ background-color: rgb(155, 187, 255)</string>
      <string/>
     </property>
     <property name="icon">
-     <iconset>
-      <normaloff>../../Downloads/icon_2149/icon_refresh.png</normaloff>../../Downloads/icon_2149/icon_refresh.png</iconset>
+     <iconset resource="icon_refresh.qrc">
+      <normaloff>:/new/resource/icon_refresh.png</normaloff>
+      <normalon>:/new/resource/icon_refresh.png</normalon>:/new/resource/icon_refresh.png</iconset>
     </property>
     <property name="iconSize">
      <size>
-      <width>24</width>
-      <height>24</height>
+      <width>36</width>
+      <height>36</height>
      </size>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
     </property>
    </widget>
    <widget class="QPlainTextEdit" name="originalText">
@@ -129,8 +139,8 @@ border-color: none;</string>
    <widget class="QGroupBox" name="groupBox">
     <property name="geometry">
      <rect>
-      <x>350</x>
-      <y>21</y>
+      <x>690</x>
+      <y>20</y>
       <width>121</width>
       <height>41</height>
      </rect>
@@ -167,9 +177,82 @@ background-color: rgb(227, 227, 227);</string>
      </property>
     </widget>
    </widget>
+   <widget class="QGroupBox" name="resultsWrapper">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>20</y>
+      <width>521</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border-radius: 8px;
+background-color: rgb(227, 227, 227);</string>
+    </property>
+    <property name="title">
+     <string/>
+    </property>
+    <widget class="QLabel" name="WPM">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>10</y>
+       <width>211</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>18</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+       <stylestrategy>PreferDefault</stylestrategy>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">color: rgb(56, 56, 56)</string>
+     </property>
+     <property name="text">
+      <string>СЛОВ В МИНУТУ: 0</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="LPM">
+     <property name="geometry">
+      <rect>
+       <x>250</x>
+       <y>10</y>
+       <width>261</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>18</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+       <stylestrategy>PreferDefault</stylestrategy>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">color: rgb(56, 56, 56)</string>
+     </property>
+     <property name="text">
+      <string>СИМВОЛОВ В МИНУТУ: 0</string>
+     </property>
+    </widget>
+   </widget>
+   <zorder>inputText</zorder>
+   <zorder>refreshButton</zorder>
+   <zorder>originalText</zorder>
+   <zorder>groupBox</zorder>
+   <zorder>resultsWrapper</zorder>
+   <zorder>timer</zorder>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources/>
+ <resources>
+  <include location="icon_refresh.qrc"/>
+ </resources>
  <connections/>
 </ui>
