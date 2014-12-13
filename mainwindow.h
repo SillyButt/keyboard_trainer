@@ -7,6 +7,8 @@ extern int total_words_passed;
 extern int total_fails;
 extern int timerSeconds;
 extern bool timerIsActive;
+extern int maxFiles;
+extern int minFiles;
 
 namespace Ui {
 class MainWindow;
@@ -21,7 +23,7 @@ class MainWindow : public QMainWindow
         ~MainWindow();
 
         QStringList getWords();
-        QString currentWord();
+        QString wordToWrite();
         void initialize();
         void disableInput();
         void removeCurrentWord();
@@ -29,6 +31,7 @@ class MainWindow : public QMainWindow
         void refresh();
         void runTimer();
         void endProgram();
+        int randomNumber();
 
 
     private slots:

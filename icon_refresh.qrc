@@ -3,6 +3,18 @@
         <file>icon_refresh.png</file>
     </qresource>
     <qresource prefix="/">
-        <file>text.txt</file>
+        <file>main.cpp</file>
+        <file>mainwindow.cpp</file>
+        <file>mainwindow.h</file>
+        <file>texts/1.txt</file>
+        <file>texts/2.txt</file>
+        <file>texts/3.txt</file>
+        <file>texts/4.txt</file>
+        <file>texts/5.txt</file>
+        <file>texts/6.txt</file>
+        <file>texts/7.txt</file>
+        <file>texts/8.txt</file>
+        <file>texts/9.txt</file>
+        <file>texts/10.txt</file>
     </qresource>
 </RCC>

@@ -5,9 +5,12 @@
 #include <QTCore/QFile>
 #include <QTCore/QTextStream>
 #include <QDebug>
+#include <time.h>
 
 int total_words_passed;
 int total_fails;
+int maxFiles = 10;
+int minFiles = 1;
 int timerSeconds;
 bool timerIsActive;
 
@@ -49,7 +52,9 @@ void MainWindow::initialize()
 
 void MainWindow::loadTextFile()
 {
-    QString fileName = ":/text.txt";
+    int randomFile = MainWindow::randomNumber();
+    qDebug() << randomFile;
+    QString fileName = QString(":/texts/") + QString::number(randomFile) + QString(".txt");
     QFile inputFile(fileName);
     if (!inputFile.exists())
     {
@@ -65,6 +70,12 @@ void MainWindow::loadTextFile()
     ui->originalText->setPlainText(line);
 }
 
+int MainWindow::randomNumber()
+{
+    qsrand(time(NULL));
+    return qrand() % (maxFiles - minFiles) + minFiles;
+}
+
 QStringList MainWindow::getWords()
 {
     QString     text  = ui->originalText->toPlainText();
@@ -72,21 +83,21 @@ QStringList MainWindow::getWords()
     return words;
 }
 
-QString MainWindow::currentWord()
+QString MainWindow::wordToWrite()
 {
     return MainWindow::getWords()[0];
 }
 
 void MainWindow::removeCurrentWord()
 {
-    QString word = MainWindow::currentWord();
+    QString word = MainWindow::wordToWrite();
     QString text = ui->originalText->toPlainText();
     ui->originalText->setPlainText(text.remove(0, word.length()+1));
 }
 
 void MainWindow::checkIsLastWord()
 {
-    if (MainWindow::currentWord().length() == 0)
+    if (MainWindow::wordToWrite().length() == 0)
     {
         MainWindow::endProgram();
     }
@@ -94,33 +105,49 @@ void MainWindow::checkIsLastWord()
 
 void MainWindow::on_inputText_textEdited(const QString &arg)
 {
+    // Length of characters in input.
+    int length = arg.length();
+    QChar space = 0x20;
+
+    // Starts timer when input first time changed.
     if (!timerIsActive)
     {
         MainWindow::runTimer();
     }
 
-    int length = arg.length();
-    QString currentWord = MainWindow::currentWord();
-    QString lastChar = arg[length-1];
-    if (length > 1) { // FIX THIS!
-        if (arg[length-1] == 0x20) // Space
+    // Prevent space as a first character
+    if (length == 1 && arg[0] == space)
+    {
+        ui->inputText->clear();
+    }
+
+    if (length > 1) {
+        QString wordToWrite = MainWindow::wordToWrite(); // The word that needs to be written.
+        QChar lastCharacter = arg[length-1]; // The last character of written(or half-written) word.
+
+        if (lastCharacter == space)
         {
-            QString typedWord = arg.mid(0, length-1);
-            if (typedWord == currentWord) {
+            QString typedWord = arg.mid(0, length-1); // A full word without last character(Space)
+
+            if (typedWord == wordToWrite) {
                 ui->inputText->clear();
-                total_words_passed++;
+
                 MainWindow::removeCurrentWord();
                 MainWindow::checkIsLastWord();
+
+                total_words_passed++;
                 return;
             }
         }
-        if (arg[length-1] == currentWord[length-1])
+
+        // If user writes the right way
+        if (lastCharacter == wordToWrite[length-1])
         {
             // Color the character on originalText
             //qDebug() << "GOOD";
         } else {
             total_fails++;
-             //qDebug() << "BAD";
+            //qDebug() << "BAD";
         }
     }
 }
@@ -161,6 +188,7 @@ void MainWindow::endProgram()
     qDebug() << "END";
     qDebug() << "WINS: " << total_words_passed;
     ui->inputText->setDisabled(true);
-    ui->timer->setText("0");
+    ui->timer->setText("0 : 0");
     timer->stop();
+    timerIsActive = false;
 }
