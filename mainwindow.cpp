@@ -1,19 +1,21 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <time.h>
 #include <QApplication>
-#include <QtGui>
 #include <QTCore/QFile>
 #include <QTCore/QTextStream>
+#include <QtGui>
 #include <QDebug>
-#include <time.h>
+
+int MAX_FILES = 10;
+int MIN_FILES = 1;
 
 int totalWordsPassed;
 int totalFails;
-int maxFiles = 10;
-int minFiles = 1;
-int timerSeconds;
 int totalCharactersPassed = 0;
+int timerSeconds;
 bool timerIsActive;
+int mode = 0; // 0 - training, 1 - practice
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -21,8 +23,6 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->inputText->setAttribute(Qt::WA_MacShowFocusRect, 0);
-
-    MainWindow::initialize();
 }
 
 MainWindow::~MainWindow()
@@ -30,9 +30,9 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::initialize()
+void MainWindow::initialize_practice_mode()
 {
-
+    mode = 1;
     totalWordsPassed    = 0;
     totalFails          = 0;
     timerIsActive       = false;
@@ -52,12 +52,41 @@ void MainWindow::initialize()
     }
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(update()));
-    MainWindow::loadTextFile();
+    MainWindow::loadTextFile(false);
+
+    ui->widget->hide();
 }
 
-void MainWindow::loadTextFile()
+void MainWindow::initialize_training_mode()
 {
-    int randomFile = MainWindow::randomNumber();
+    mode = 0;
+    totalWordsPassed    = 0;
+    totalFails          = 0;
+    totalCharactersPassed = 0;
+
+    ui->inputText->clear();
+    ui->inputText->setEnabled(true);
+    ui->resultsWrapper->hide();
+    ui->WPM->hide();
+    ui->LPM->hide();
+    ui->groupBox->hide();
+    ui->timer->hide();
+
+    MainWindow::loadTextFile(true);
+
+    ui->widget->hide();
+}
+
+void MainWindow::loadTextFile(bool practiceMode = false)
+{
+    int randomFile = 0;
+    if (!practiceMode)
+    {
+        randomFile = MainWindow::randomNumber();
+    } else {
+        randomFile = 100;
+    }
+
     qDebug() << randomFile;
     QString fileName = QString(":/texts/") + QString::number(randomFile) + QString(".txt");
     QFile inputFile(fileName);
@@ -78,7 +107,7 @@ void MainWindow::loadTextFile()
 int MainWindow::randomNumber()
 {
     qsrand(time(NULL));
-    return qrand() % (maxFiles - minFiles) + minFiles;
+    return qrand() % (MAX_FILES - MIN_FILES + 1) + MIN_FILES;
 }
 
 QStringList MainWindow::getWords()
@@ -115,7 +144,7 @@ void MainWindow::on_inputText_textEdited(const QString &arg)
     QChar space = 0x20;
 
     // Starts timer when input first time changed.
-    if (!timerIsActive)
+    if (!timerIsActive && mode)
     {
         MainWindow::runTimer();
     }
@@ -150,17 +179,19 @@ void MainWindow::on_inputText_textEdited(const QString &arg)
         if (lastCharacter == wordToWrite[length-1])
         {
             // Color the character on originalText
-            //qDebug() << "GOOD";
         } else {
             totalFails++;
-            //qDebug() << "BAD";
         }
     }
 }
 
 void MainWindow::on_refreshButton_clicked()
 {
-    MainWindow::initialize();
+    if (mode) {
+        MainWindow:initialize_practice_mode();
+    } else {
+        MainWindow::initialize_training_mode();
+    }
 }
 
 void MainWindow::runTimer()
@@ -194,13 +225,26 @@ void MainWindow::endProgram()
     qDebug() << "END";
     qDebug() << "WINS: " << totalWordsPassed;
     qDebug() << "CHARASTERS: " << totalCharactersPassed;
+    qDebug() << "FAILS: " << totalFails;
     ui->resultsWrapper->show();
     ui->WPM->show();
     ui->LPM->show();
     ui->WPM->setText("СЛОВ В МИНУТУ: " + QString::number(totalWordsPassed));
     ui->LPM->setText("СИМВОЛОВ В МИНУТУ: " + QString::number(totalCharactersPassed));
-    ui->inputText->setDisabled(true);
-    ui->timer->setText("0 : 00");
-    timer->stop();
-    timerIsActive = false;
+    if (mode) {
+        ui->inputText->setDisabled(true);
+        ui->timer->setText("0 : 00");
+        timer->stop();
+        timerIsActive = false;
+    }
+}
+
+void MainWindow::on_button_training_clicked()
+{
+    MainWindow::initialize_training_mode();
+}
+
+void MainWindow::on_button_practice_clicked()
+{
+    MainWindow::initialize_practice_mode();
 }

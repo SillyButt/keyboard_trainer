@@ -10,6 +10,7 @@ extern bool timerIsActive;
 extern int maxFiles;
 extern int minFiles;
 extern int totalCharactersPassed;
+extern int mode;
 
 namespace Ui {
 class MainWindow;
@@ -25,7 +26,8 @@ class MainWindow : public QMainWindow
 
         QStringList getWords();
         QString wordToWrite();
-        void initialize();
+        void initialize_practice_mode();
+        void initialize_training_mode();
         void disableInput();
         void removeCurrentWord();
         void checkIsLastWord();
@@ -38,12 +40,14 @@ class MainWindow : public QMainWindow
     private slots:
         void on_inputText_textEdited(const QString &arg1);
         void on_refreshButton_clicked();
+        void on_button_practice_clicked();
+        void on_button_training_clicked();
         void update();
 
-    private:
+private:
             Ui::MainWindow *ui;
             QTimer *timer;
-            void loadTextFile();
+            void loadTextFile(bool practiceMode);
 };
 
 

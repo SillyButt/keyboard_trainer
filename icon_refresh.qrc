@@ -16,5 +16,7 @@
         <file>texts/8.txt</file>
         <file>texts/9.txt</file>
         <file>texts/10.txt</file>
+        <file>keyboard.png</file>
+        <file>texts/100.txt</file>
     </qresource>
 </RCC>
