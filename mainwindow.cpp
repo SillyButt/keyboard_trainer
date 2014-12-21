@@ -98,6 +98,7 @@ void MainWindow::loadTextFile(bool practiceMode = false)
 
     inputFile.open(QIODevice::ReadOnly);
     QTextStream in(&inputFile);
+    in.setCodec("UTF-8");
     QString line = in.readAll();
     inputFile.close();
 
